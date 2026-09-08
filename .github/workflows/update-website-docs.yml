@@ -19,6 +19,8 @@ concurrency:
 
 jobs:
   update-docs:
+    #aidevops:trust-boundary -- only upstream may use the website publication token.
+    if: github.repository == 'marcusquinn/aidevops'
     runs-on: ubuntu-latest
     
     steps:

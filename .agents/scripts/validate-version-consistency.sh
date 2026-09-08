@@ -210,7 +210,8 @@ _check_homebrew_formula() {
 	fi
 
 	formula_tag="v${formula_version}"
-	if git rev-parse -q --verify "refs/tags/${formula_tag}" >/dev/null 2>&1 || git ls-remote -q --exit-code --tags origin "refs/tags/${formula_tag}" >/dev/null 2>&1; then
+	# Validate against the archive publisher, not a fork's incomplete tag namespace.
+	if git ls-remote -q --exit-code --tags "https://github.com/marcusquinn/aidevops.git" "refs/tags/${formula_tag}" >/dev/null 2>&1; then
 		local release_sha
 		release_sha=$(fetch_with_retry "https://github.com/marcusquinn/aidevops/archive/refs/tags/${formula_tag}.tar.gz" | compute_sha256 | cut -d' ' -f1)
 		if [[ -z "$release_sha" ]]; then
@@ -223,7 +224,7 @@ _check_homebrew_formula() {
 			_vc_errors=$((_vc_errors + 1))
 		fi
 	else
-		print_error "homebrew/aidevops.rb references unreleased tag ${formula_tag}; leave formula pinned to the latest published release"
+		print_error "homebrew/aidevops.rb upstream tag ${formula_tag} could not be verified; check upstream tag availability and network access"
 		_vc_errors=$((_vc_errors + 1))
 	fi
 	return 0

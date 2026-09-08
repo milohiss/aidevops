@@ -57,6 +57,9 @@ permissions:
 
 jobs:
   sync:
+    # This caller publishes upstream planning; downstream repos use the caller template.
+    #aidevops:trust-boundary -- forks must not publish inherited upstream tasks.
+    if: github.repository == 'marcusquinn/aidevops'
     uses: ./.github/workflows/issue-sync-reusable.yml
     secrets: inherit
     with:

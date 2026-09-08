@@ -14,6 +14,8 @@ concurrency:
 jobs:
   sync-wiki:
     name: Sync Wiki to GitHub
+    #aidevops:trust-boundary -- only the upstream repository publishes this wiki.
+    if: github.repository == 'marcusquinn/aidevops'
     runs-on: ubuntu-latest
     permissions:
       contents: write
